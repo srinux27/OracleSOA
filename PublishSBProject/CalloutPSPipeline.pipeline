@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:pipelineEntry xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con1="http://www.bea.com/wli/sb/stages/config" xmlns:con2="http://www.bea.com/wli/sb/stages/routing/config" xmlns:con3="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+    <con:coreEntry>
+        <con:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType">
+            <con:wsdl ref="PublishSBProject/AddService"/>
+            <con:binding>
+                <con:name>AddServicePortBinding</con:name>
+                <con:namespace>http://annotation/</con:namespace>
+            </con:binding>
+        </con:binding>
+        <con:xqConfiguration>
+            <con:snippetVersion>1.0</con:snippetVersion>
+        </con:xqConfiguration>
+    </con:coreEntry>
+    <con:router>
+        <con:flow>
+            <con:route-node name="RouteNode1">
+                <con:context>
+                    <con1:userNsDecl prefix="ann" namespace="http://annotation/"/>
+                </con:context>
+                <con:actions>
+                    <con2:route>
+                        <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7f30</con1:id>
+                        <con2:service ref="PublishSBProject/AddFunctionBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                        <con2:operation>addMethod</con2:operation>
+                        <con2:outboundTransform>
+                            <con3:assign varName="jp1">
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7bd2</con1:id>
+                                <con3:expr>
+                                    <con1:xqueryText>xs:int($body/ann:addMethod/arg1)</con1:xqueryText>
+                                </con3:expr>
+                            </con3:assign>
+                            <con3:assign varName="jp2">
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7c05</con1:id>
+                                <con3:expr>
+                                    <con1:xqueryText>xs:int($body/ann:addMethod/arg0)</con1:xqueryText>
+                                </con3:expr>
+                            </con3:assign>
+                            <con3:javaCallout varName="javaresp">
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7c3a</con1:id>
+                                <con3:archive ref="PublishSBProject/JavaArchive"/>
+                                <con3:className>simple.HelloWorld</con3:className>
+                                <con3:method>public static java.lang.String getAddOutput(int, int)</con3:method>
+                                <con3:expr>
+                                    <con1:xqueryText>$jp1</con1:xqueryText>
+                                </con3:expr>
+                                <con3:expr>
+                                    <con1:xqueryText>$jp2</con1:xqueryText>
+                                </con3:expr>
+                                <con3:return-param-as-ref>false</con3:return-param-as-ref>
+                            </con3:javaCallout>
+                            <con3:assign varName="param1">
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7eca</con1:id>
+                                <con3:expr>
+                                    <con1:xqueryText>$body/ann:addMethod</con1:xqueryText>
+                                </con3:expr>
+                            </con3:assign>
+                            <con3:wsCallout>
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7e33</con1:id>
+                                <con3:service ref="PublishSBProject/ExternalBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                                <con3:operation>addMethod</con3:operation>
+                                <con3:request>
+                                    <con3:body wrapped="false">param1</con3:body>
+                                    <con3:header/>
+                                </con3:request>
+                                <con3:response>
+                                    <con3:body wrapped="false">calloutResp</con3:body>
+                                    <con3:header/>
+                                </con3:response>
+                                <con3:requestTransform/>
+                                <con3:responseTransform/>
+                            </con3:wsCallout>
+                            <con4:log>
+                                <con1:id>_ActionId-N3f57fd53.N2bfb0a81.0.15722b3bc31.N7cd5</con1:id>
+                                <con4:logLevel>error</con4:logLevel>
+                                <con4:expr>
+                                    <con1:xqueryText>$javaresp</con1:xqueryText>
+                                </con4:expr>
+                            </con4:log>
+                        </con2:outboundTransform>
+                        <con2:responseTransform/>
+                    </con2:route>
+                </con:actions>
+            </con:route-node>
+        </con:flow>
+    </con:router>
+</con:pipelineEntry>
