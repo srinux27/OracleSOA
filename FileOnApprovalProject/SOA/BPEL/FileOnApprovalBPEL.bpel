@@ -1,0 +1,183 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Fri Sep 16 14:47:30 IST 2016
+  Author:  Administrator
+  Type: BPEL 2.0 Process
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="FileOnApprovalBPEL"
+         targetNamespace="http://xmlns.oracle.com/SOAApplicationSpace/FileOnApprovalProject/FileOnApprovalBPEL"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/SOAApplicationSpace/FileOnApprovalProject/FileOnApprovalBPEL"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/file/SOAApplicationSpace/FileOnApprovalProject/fileReference"
+         xmlns:ns2="http://database/" xmlns:task="http://xmlns.oracle.com/bpel/workflow/task"
+         xmlns:taskservice="http://xmlns.oracle.com/bpel/workflow/taskService"
+         xmlns:wfcommon="http://xmlns.oracle.com/bpel/workflow/common"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ns3="http://xmlns.oracle.com/bpel/workflow/TaskEvidenceService"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/SOAApplicationSpace/FileOnApprovalProject/FileOnApprovalBPEL" location="../WSDLs/FileOnApprovalBPEL.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="fileonapprovalbpel_client" partnerLinkType="client:FileOnApprovalBPEL" myRole="FileOnApprovalBPELProvider" partnerRole="FileOnApprovalBPELRequester"/>
+        <partnerLink name="fileReference" partnerLinkType="ns1:Write_plt" partnerRole="Write_role"/>
+        <partnerLink name="FileApprovalHT.TaskService_1" partnerLinkType="taskservice:TaskService"
+                     partnerRole="TaskService" myRole="TaskServiceCallbackListener"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:FileOnApprovalBPELRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:FileOnApprovalBPELResponseMessage"/>
+        <variable name="HTInvoke_Write_InputVariable" messageType="ns1:Write_msg"/>
+        <variable name="FileApprovalHT1_globalVariable" messageType="taskservice:taskMessage"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in FileOnApprovalBPEL.wsdl) -->
+        <receive name="receiveInput" partnerLink="fileonapprovalbpel_client" portType="client:FileOnApprovalBPEL" operation="process" variable="inputVariable" createInstance="yes"/>
+        <scope name="FileApprovalHT3" xmlns:wf="http://schemas.oracle.com/bpel/extensions/workflow"
+               wf:key="FileApprovalHT1_globalVariable">
+            <bpelx:annotation>
+                <bpelx:pattern patternName="bpelx:workflow"></bpelx:pattern>
+            </bpelx:annotation>
+            <variables>
+                <variable name="initiateTaskInput" messageType="taskservice:initiateTaskMessage"/>
+                <variable name="initiateTaskResponseMessage" messageType="taskservice:initiateTaskResponseMessage"/>
+            </variables>
+            <sequence>
+                <assign name="FileApprovalHT3_AssignTaskAttributes">
+                    <copy>
+                        <from>number(3)</from>
+                        <to variable="initiateTaskInput" part="payload"><query>task:task/task:priority</query></to>
+                    </copy>
+                    <copy>
+                        <from>number(3)</from>
+                        <to variable="initiateTaskInput" part="payload"><query>task:task/task:priority</query></to>
+                    </copy>
+                    <copy>
+                        <from>number(3)</from>
+                        <to variable="initiateTaskInput" part="payload"><query>task:task/task:priority</query></to>
+                    </copy>
+                    <copy>
+                        <from><literal><payload xmlns="http://xmlns.oracle.com/bpel/workflow/task">
+	<saveDept xmlns="http://database/"/> 
+</payload></literal></from>
+                        <to variable="initiateTaskInput" part="payload"><query>task:task/task:payload</query></to>
+                    </copy>
+                    <copy>
+                        <from variable="inputVariable" part="payload"/>
+                        <to variable="initiateTaskInput" part="payload"><query>task:task/task:payload/ns2:saveDept</query></to>
+                    </copy>
+                </assign>
+                <invoke name="initiateTask_FileApprovalHT3" partnerLink="FileApprovalHT.TaskService_1"
+                        operation="initiateTask" portType="taskservice:TaskService" inputVariable="initiateTaskInput"
+                        outputVariable="initiateTaskResponseMessage"/>
+                <receive name="receiveCompletedTask_FileApprovalHT3" partnerLink="FileApprovalHT.TaskService_1"
+                         portType="taskservice:TaskServiceCallback" operation="onTaskCompleted"
+                         variable="FileApprovalHT1_globalVariable" createInstance="no"/>
+            </sequence>
+        </scope>
+        <if name="taskIf">
+            <documentation>
+                <![CDATA[Task outcome is APPROVE]]>
+            </documentation>
+            <condition>$FileApprovalHT1_globalVariable.payload/task:systemAttributes/task:outcome = 'APPROVE'</condition>
+            <sequence>
+                <assign name="CopyPayloadFromTask">
+                    <copy>
+                        <from variable="FileApprovalHT1_globalVariable" part="payload"><query>task:payload/ns2:saveDept</query></from>
+                        <to variable="inputVariable" part="payload"/>
+                    </copy>
+                </assign>
+            </sequence>
+            <elseif>
+                <documentation>
+                    <![CDATA[Task outcome is REJECT]]>
+                </documentation>
+                <condition>$FileApprovalHT1_globalVariable.payload/task:systemAttributes/task:outcome = 'REJECT'</condition>
+                <sequence>
+                    <assign name="CopyPayloadFromTask">
+                        <copy>
+                            <from variable="FileApprovalHT1_globalVariable" part="payload"><query>task:payload/ns2:saveDept</query></from>
+                            <to variable="inputVariable" part="payload"/>
+                        </copy>
+                    </assign>
+                </sequence>
+            </elseif>
+        </if>
+        <if name="If1">
+            <condition>$FileApprovalHT1_globalVariable.payload/task:systemAttributes/task:outcome = 'APPROVE'</condition>
+            <sequence>
+                <assign name="Transformation1">
+                    <bpelx:annotation>
+                        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+                    </bpelx:annotation>
+                    <copy>
+                        <from>ora:doXSLTransformForDoc("../Transformations/Transformation1_1.xsl", $inputVariable.payload)</from>
+                        <to variable="HTInvoke_Write_InputVariable" part="body"/>
+                    </copy>
+                </assign>
+                <invoke name="Invoke1" partnerLink="fileReference" portType="ns1:Write_ptt" operation="Write"
+                        inputVariable="HTInvoke_Write_InputVariable" bpelx:invokeAsDetail="no"/>
+            </sequence>
+            <else>
+                <assign name="Transformation2">
+                    <bpelx:annotation>
+                        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+                    </bpelx:annotation>
+                    <copy>
+                        <from>ora:doXSLTransformForDoc("../Transformations/Transformation2_1.xsl", $inputVariable.payload)</from>
+                        <to variable="outputVariable" part="payload"/>
+                    </copy>
+                </assign>
+            </else>
+        </if>
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <invoke name="callbackClient" partnerLink="fileonapprovalbpel_client" portType="client:FileOnApprovalBPELCallback" operation="processResponse" inputVariable="outputVariable"/>
+    </sequence>
+</process>
