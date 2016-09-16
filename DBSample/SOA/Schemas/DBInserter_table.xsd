@@ -1,0 +1,25 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/DBInserter" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/DBInserter" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="DeptCollection" type="DeptCollection"/>
+   <xs:complexType name="DeptCollection">
+      <xs:sequence>
+         <xs:element name="Dept" type="Dept" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Dept">
+      <xs:sequence>
+         <xs:element name="deptno" type="string10" nillable="true"/>
+         <xs:element name="deptname" type="string100" minOccurs="0" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="string10">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="10"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string100">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="100"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
