@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dgm:gDiagram xmlns:dgm="http://xmlns.oracle.com/sca/soadgm">
+    <dgm:gService name="Mediator1_ep">
+        <dgm:body borderWidth="2" arcRad="20" X="21" Y="57" width="137" height="84">
+            <dgm:borderColor r="153" g="153" b="153"/>
+            <dgm:bgColor r="255" g="255" b="255"/>
+        </dgm:body>
+        <dgm:shadow arcRad="20" X="11" Y="50" width="156" height="98">
+            <dgm:bgColor r="196" g="228" b="240"/>
+        </dgm:shadow>
+        <dgm:outputPort name="Mediator1_ep" X="127" Y="0" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://concatenate/#wsdl.interface(Concat)"/>
+        <dgm:nodeIcon URI="/oracle/tip/tools/ide/adapters/designtime/adapter/images/soap_service_20x20.png" X="20" Y="4" width="20" height="20"/>
+        <dgm:operations>
+            <dgm:item>combineName</dgm:item>
+        </dgm:operations>
+    </dgm:gService>
+    <dgm:gReference name="fileReference">
+        <dgm:body borderWidth="2" arcRad="20" X="821" Y="103" width="136" height="84">
+            <dgm:borderColor r="153" g="153" b="153"/>
+            <dgm:bgColor r="255" g="255" b="255"/>
+        </dgm:body>
+        <dgm:shadow arcRad="20" X="811" Y="96" width="156" height="98">
+            <dgm:bgColor r="196" g="228" b="240"/>
+        </dgm:shadow>
+        <dgm:inputPort name="fileReference" X="-10" Y="0" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/pcbpel/adapter/file/SOAApplicationSpace/NewBussRulesProject/fileReference#wsdl.interface(Write_ptt)"/>
+        <dgm:nodeIcon URI="/oracle/tip/tools/ide/adapters/designtime/adapter/images/file_adapter_20x20.png" X="27" Y="4" width="20" height="20"/>
+        <dgm:operations>
+            <dgm:item>Write</dgm:item>
+        </dgm:operations>
+    </dgm:gReference>
+    <dgm:gComponent name="Mediator1">
+        <dgm:body borderWidth="2" arcRad="20" X="226" Y="42" width="130" height="61">
+            <dgm:borderColor r="128" g="92" b="148"/>
+            <dgm:lightBgColor r="208" g="169" b="227"/>
+            <dgm:darkBgColor r="183" g="132" b="212"/>
+        </dgm:body>
+        <dgm:shadow arcRad="20" X="216" Y="35" width="150" height="77">
+            <dgm:bgColor r="196" g="228" b="240"/>
+        </dgm:shadow>
+        <dgm:inputPort name="Mediator1" X="-10" Y="15" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://concatenate/#wsdl.interface(Concat)"/>
+        <dgm:outputPort name="BPELProcess1.bpelprocess1_client" X="120" Y="15" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/SOAApplicationSpace/NewBussRulesProject/BPELProcess1#wsdl.interface(BPELProcess1)"/>
+        <dgm:nodeIcon URI="/oracle/tip/tools/ide/mediator/resource/image/mediator_20x20.png" X="10" Y="4" width="20" height="20"/>
+    </dgm:gComponent>
+    <dgm:gComponent name="BPELProcess1">
+        <dgm:body borderWidth="2" arcRad="20" X="424" Y="42" width="130" height="86">
+            <dgm:borderColor r="69" g="113" b="140"/>
+            <dgm:lightBgColor r="166" g="208" b="230"/>
+            <dgm:darkBgColor r="99" g="162" b="201"/>
+        </dgm:body>
+        <dgm:shadow arcRad="20" X="414" Y="35" width="150" height="102">
+            <dgm:bgColor r="196" g="228" b="240"/>
+        </dgm:shadow>
+        <dgm:inputPort name="bpelprocess1_client" X="-10" Y="15" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/SOAApplicationSpace/NewBussRulesProject/BPELProcess1#wsdl.interface(BPELProcess1)"/>
+        <dgm:outputPort name="OracleRules1.OracleRules1_DecisionService_1" X="120" Y="15" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/OracleRules1/OracleRules1_DecisionService_1#wsdl.interface(IDecisionService)"/>
+        <dgm:outputPort name="fileReference" X="120" Y="40" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/pcbpel/adapter/file/SOAApplicationSpace/NewBussRulesProject/fileReference#wsdl.interface(Write_ptt)"/>
+        <dgm:nodeIcon URI="/oracle/tip/tools/ide/bpel/shared/plugins/resources/images/soa/process_20x20.png" X="10" Y="4" width="20" height="20"/>
+    </dgm:gComponent>
+    <dgm:gComponent name="OracleRules1">
+        <dgm:body borderWidth="2" arcRad="20" X="623" Y="26" width="130" height="61">
+            <dgm:borderColor r="178" g="138" b="53"/>
+            <dgm:lightBgColor r="255" g="226" b="142"/>
+            <dgm:darkBgColor r="255" g="198" b="77"/>
+        </dgm:body>
+        <dgm:shadow arcRad="20" X="613" Y="19" width="150" height="77">
+            <dgm:bgColor r="196" g="228" b="240"/>
+        </dgm:shadow>
+        <dgm:inputPort name="OracleRules1_DecisionService_1" X="-10" Y="15" diameter="20" imageURI="oracle/tip/tools/ide/fabric/resource/image/visuals_rd1/servicereference.png" interface="http://xmlns.oracle.com/OracleRules1/OracleRules1_DecisionService_1#wsdl.interface(IDecisionService)"/>
+        <dgm:nodeIcon URI="/oracle/tip/tools/ide/rules/plugins/resources/images/soa/decision_20x20.png" X="10" Y="4" width="20" height="20"/>
+    </dgm:gComponent>
+    <dgm:gWireLink source="Mediator1_ep" target="Mediator1/Mediator1" width="2">
+        <dgm:gSegment X1="168" Y1="67" X2="216" Y2="67"/>
+        <dgm:baseColor r="153" g="153" b="153"/>
+        <dgm:selectedColor r="49" g="106" b="196"/>
+    </dgm:gWireLink>
+    <dgm:gWireLink source="Mediator1/BPELProcess1.bpelprocess1_client" target="BPELProcess1/bpelprocess1_client" width="2">
+        <dgm:gSegment X1="366" Y1="67" X2="414" Y2="67"/>
+        <dgm:baseColor r="153" g="153" b="153"/>
+        <dgm:selectedColor r="49" g="106" b="196"/>
+    </dgm:gWireLink>
+    <dgm:gWireLink source="BPELProcess1/OracleRules1.OracleRules1_DecisionService_1" target="OracleRules1/OracleRules1_DecisionService_1" width="2">
+        <dgm:gSegment X1="564" Y1="67" X2="589" Y2="67"/>
+        <dgm:gSegment X1="589" Y1="67" X2="589" Y2="51"/>
+        <dgm:gSegment X1="589" Y1="51" X2="613" Y2="51"/>
+        <dgm:baseColor r="153" g="153" b="153"/>
+        <dgm:selectedColor r="49" g="106" b="196"/>
+    </dgm:gWireLink>
+    <dgm:gWireLink source="BPELProcess1/fileReference" target="fileReference" width="2">
+        <dgm:gSegment X1="564" Y1="92" X2="589" Y2="92"/>
+        <dgm:gSegment X1="589" Y1="92" X2="589" Y2="113"/>
+        <dgm:gSegment X1="589" Y1="113" X2="811" Y2="113"/>
+        <dgm:baseColor r="153" g="153" b="153"/>
+        <dgm:selectedColor r="49" g="106" b="196"/>
+    </dgm:gWireLink>
+</dgm:gDiagram>

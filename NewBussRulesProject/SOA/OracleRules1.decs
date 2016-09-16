@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<decisionServices xmlns="http://xmlns.oracle.com/bpel/rules" name="OracleRules1">
+    <ruleEngineProvider provider="Oracle_11.0.0.0.0" name="OracleRulesSDK">
+        <repository type="SCA-Archive">
+            <path>NewBussRulesProject/oracle/rules/newbussrulesproject/OracleRules1.rules</path>
+        </repository>
+    </ruleEngineProvider>
+    <decisionService name="OracleRules1_DecisionService_1" ruleEngineProviderReference="OracleRulesSDK" targetNamespace="http://xmlns.oracle.com/OracleRules1/OracleRules1_DecisionService_1">
+        <catalog>OracleRules1</catalog>
+        <pattern name="CallFunctionStateless">
+            <arguments>
+                <call>newbussrulesproject.OracleRules1.DecisionService_1</call>
+            </arguments>
+        </pattern>
+        <pattern name="CallFunctionStateful">
+            <arguments>
+                <call>newbussrulesproject.OracleRules1.DecisionService_1</call>
+            </arguments>
+        </pattern>
+    </decisionService>
+    <schemaInformation>
+        <dictionary fqnPackage="newbussrulesproject" fqnName="OracleRules1" updateNumber="39">
+            <schemaBrowser>
+                <package>concatenate</package>
+                <namespace>http://concatenate/</namespace>
+            </schemaBrowser>
+            <schemaImport namespace="http://concatenate/" localPart="ConcatPort_xsd_1.xsd" schemaLocation="Schemas/ConcatPort_xsd_1.xsd">
+                <import namespace="http://concatenate/" localPart="ConcatPort_xsd_1.xsd" schemaLocation="Schemas/ConcatPort_xsd_1.xsd"/>
+            </schemaImport>
+        </dictionary>
+    </schemaInformation>
+</decisionServices>

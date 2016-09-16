@@ -1,0 +1,107 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Fri Sep 16 12:11:44 IST 2016
+  Author:  Administrator
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="BPELProcess1"
+               targetNamespace="http://xmlns.oracle.com/SOAApplicationSpace/NewBussRulesProject/BPELProcess1"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/SOAApplicationSpace/NewBussRulesProject/BPELProcess1"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/OracleRules1/OracleRules1_DecisionService_1"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/file/SOAApplicationSpace/NewBussRulesProject/fileReference">
+
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/SOAApplicationSpace/NewBussRulesProject/BPELProcess1" location="../WSDLs/BPELProcess1.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="bpelprocess1_client" partnerLinkType="client:BPELProcess1" myRole="BPELProcess1Provider"/>
+    <partnerLink name="OracleRules1.OracleRules1_DecisionService_1"
+                 partnerLinkType="ns1:OracleRules1.OracleRules1_DecisionService_1" partnerRole="IDecisionService"/>
+    <partnerLink name="fileReference" partnerLinkType="ns2:Write_plt" partnerRole="Write_role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:BPELProcess1RequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:BPELProcess1ResponseMessage"/>
+    <variable name="Invoke1_callFunctionStateless_InputVariable" messageType="ns1:callFunctionStatelessMessage"/>
+    <variable name="Invoke1_callFunctionStateless_OutputVariable"
+              messageType="ns1:callFunctionStatelessDecisionMessage"/>
+    <variable name="Invoke2_Write_InputVariable" messageType="ns2:Write_msg"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in BPELProcess1.wsdl) -->
+    <receive name="receiveInput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="Transformation3">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from>ora:doXSLTransformForDoc("../Transformations/Transformation3_1.xsl", $inputVariable.payload)</from>
+        <to variable="Invoke2_Write_InputVariable" part="body"/>
+      </copy>
+    </assign>
+    <invoke name="Invoke2" partnerLink="fileReference" portType="ns2:Write_ptt"
+            operation="Write" inputVariable="Invoke2_Write_InputVariable" bpelx:invokeAsDetail="no"/>
+    <assign name="Transformation1">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from>ora:doXSLTransformForDoc("../Transformations/Transformation1_1.xsl", $inputVariable.payload)</from>
+        <to variable="Invoke1_callFunctionStateless_InputVariable" part="payload"/>
+      </copy>
+    </assign>
+    <invoke name="Invoke1" partnerLink="OracleRules1.OracleRules1_DecisionService_1"
+            portType="ns1:IDecisionService" operation="callFunctionStateless"
+            inputVariable="Invoke1_callFunctionStateless_InputVariable"
+            outputVariable="Invoke1_callFunctionStateless_OutputVariable" bpelx:invokeAsDetail="no"/>
+    <assign name="Transformation2">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from>ora:doXSLTransformForDoc("../Transformations/Transformation2_1.xsl", $Invoke1_callFunctionStateless_OutputVariable.payload)</from>
+        <to variable="outputVariable" part="payload"/>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process" variable="outputVariable"/>
+  </sequence>
+</process>

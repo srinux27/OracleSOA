@@ -1,0 +1,17 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xsd:schema xmlns:ns0="http://concatenate/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://concatenate/">
+    <xsd:complexType name="combineName">
+        <xsd:sequence>
+            <xsd:element name="arg0" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="arg1" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="combineNameResponse">
+        <xsd:sequence>
+            <xsd:element name="concatName" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="combineName" type="ns0:combineName"/>
+    <xsd:element name="combineNameResponse" type="ns0:combineNameResponse"/>
+</xsd:schema>
+<!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.11-b150616.1732 svn-revision#a247ba216861f2c0baac9a3657c5690bce0c744d. -->
